@@ -5,18 +5,11 @@ import 'package:flight_search/src/widgets/custom_shape_clipper.dart';
 import 'package:flight_search/src/utils/theme.dart';
 import 'package:flight_search/src/widgets/choice_chip.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flight_search/src/utils/widgets/inherited_flight_listing.dart';
 import 'package:flight_search/src/blocs/bloc_provider.dart';
 import 'package:flight_search/src/blocs/home_bloc.dart';
 import 'package:flight_search/src/blocs/app_bloc.dart';
 
-class HomeScreenTopBar extends StatefulWidget {
-  @override
-  _HomeScreenTopBarState createState() => _HomeScreenTopBarState();
-}
-
-class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
-
+class HomeScreenTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _homeBloc = BlocProvider.of<HomeBloc>(context);
