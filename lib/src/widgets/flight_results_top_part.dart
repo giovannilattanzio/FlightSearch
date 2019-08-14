@@ -2,6 +2,8 @@ import 'package:flight_search/src/utils/theme.dart';
 import 'package:flight_search/src/utils/widgets/inherited_flight_listing.dart';
 import 'package:flight_search/src/widgets/custom_shape_clipper.dart';
 import 'package:flutter/material.dart';
+import 'package:flight_search/src/blocs/app_bloc.dart';
+import 'package:flight_search/src/blocs/bloc_provider.dart';
 
 class FlightResultsTopPart extends StatelessWidget {
   @override
@@ -35,6 +37,8 @@ class FlightResultsTopPart extends StatelessWidget {
   }
 
   Widget _createCitiesFilter(BuildContext context) {
+    final _appBloc = BlocProvider.of<AppBloc>(context);
+
     return Card(
       elevation: 10.0,
       shape: RoundedRectangleBorder(
@@ -57,17 +61,31 @@ class FlightResultsTopPart extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    InheritedFlightListing.of(context).fromLocation,
-                    style: MyTheme.cityStartingSearchStyle(context),
+                  StreamBuilder(
+                    stream: _appBloc.fromLocation,
+                    initialData: "Nessuna selezione",
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> snapshot) {
+                      return Text(
+                        snapshot.data,
+                        style: MyTheme.cityStartingSearchStyle(context),
+                      );
+                    },
                   ),
                   Divider(
                     height: 20.0,
                     color: Colors.grey,
                   ),
-                  Text(
-                    InheritedFlightListing.of(context).toLocation,
-                    style: MyTheme.cityArrivingSearchStyle(context),
+                  StreamBuilder(
+                    stream: _appBloc.toLocation,
+                    initialData: "Nessuna selezione",
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> snapshot) {
+                      return Text(
+                        snapshot.data,
+                        style: MyTheme.cityArrivingSearchStyle(context),
+                      );
+                    },
                   ),
                 ],
               ),

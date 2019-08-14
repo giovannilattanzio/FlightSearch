@@ -6,6 +6,9 @@ import 'package:flight_search/src/utils/theme.dart';
 import 'package:flight_search/src/widgets/choice_chip.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flight_search/src/utils/widgets/inherited_flight_listing.dart';
+import 'package:flight_search/src/blocs/bloc_provider.dart';
+import 'package:flight_search/src/blocs/home_bloc.dart';
+import 'package:flight_search/src/blocs/app_bloc.dart';
 
 class HomeScreenTopBar extends StatefulWidget {
   @override
@@ -13,13 +16,11 @@ class HomeScreenTopBar extends StatefulWidget {
 }
 
 class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
-  var _selectedLocation = "Seleziona";
-  var _isFlightSelected = true;
-
-  final _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final _homeBloc = BlocProvider.of<HomeBloc>(context);
+
     return Stack(
       children: <Widget>[
         ClipPath(
@@ -50,7 +51,7 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
                       Container(
                         width: 16.0,
                       ),
-                      _preparePopupMenuButton(),
+                      _preparePopupMenuButton(context),
                       Spacer(),
                       Icon(
                         Icons.settings,
@@ -78,7 +79,7 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
                   child: Material(
                     elevation: 5.0,
                     borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                    child: _createSearchField(),
+                    child: _createSearchField(context),
                   ),
                 ),
                 Container(
@@ -86,27 +87,20 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
                 ),
                 Row(
                   children: <Widget>[
-//                    ChoiceChip(
-//                      avatar: Icon(Icons.flight),
-//                      selected: true,
-//                      label: Text(
-//                        "Voli",
-//                        style: TextStyle(
-//                          color: Colors.white,
-//                          fontSize: 16.0,
-//                        ),
-//                      ),
-//                    ),
                     InkWell(
                       onTap: () {
-                        setState(() {
-                          _isFlightSelected = true;
-                        });
+                        _homeBloc.setFlightListSelected(true);
                       },
-                      child: CustomChoiceChip(
-                        icon: Icons.flight,
-                        text: "Voli",
-                        isSelected: _isFlightSelected,
+                      child: StreamBuilder(
+                        stream: _homeBloc.isFlightListSelected,
+                        initialData: true,
+                        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                          return CustomChoiceChip(
+                            icon: Icons.flight,
+                            text: "Voli",
+                            isSelected: snapshot.data,
+                          );
+                        },
                       ),
                     ),
                     Container(
@@ -114,14 +108,18 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
                     ),
                     InkWell(
                       onTap: () {
-                        setState(() {
-                          _isFlightSelected = false;
-                        });
+                        _homeBloc.setFlightListSelected(false);
                       },
-                      child: CustomChoiceChip(
-                        icon: Icons.hotel,
-                        text: "Hotel",
-                        isSelected: !_isFlightSelected,
+                      child: StreamBuilder(
+                        stream: _homeBloc.isFlightListSelected,
+                        initialData: true,
+                        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                          return CustomChoiceChip(
+                            icon: Icons.hotel,
+                            text: "Hotel",
+                            isSelected: !snapshot.data,
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -136,16 +134,19 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
     );
   }
 
-  Widget _preparePopupMenuButton() {
+  Widget _preparePopupMenuButton(BuildContext context) {
+
+    final _appBloc = BlocProvider.of<AppBloc>(context);
+
     return StreamBuilder(
-      stream: Firestore.instance.collection("locations").snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      stream: _appBloc.locations,
+      builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
         if (!snapshot.hasData) {
           return Center(
             child: CircularProgressIndicator(),
           );
         } else {
-          return _createPopupMenuButton(context, snapshot.data.documents);
+          return _createPopupMenuButton(context, snapshot.data);
         }
       },
     );
@@ -153,6 +154,9 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
 
   Widget _createPopupMenuButton(
       BuildContext context, List<DocumentSnapshot> data) {
+
+    final _appBloc = BlocProvider.of<AppBloc>(context);
+
     return PopupMenuButton(
       itemBuilder: (BuildContext context) => data
           .map((element) => PopupMenuItem(
@@ -164,15 +168,19 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
               ))
           .toList(),
       onSelected: (valueSelected) {
-        setState(() {
-          _selectedLocation = valueSelected;
-        });
+        _appBloc.setFromLocation(valueSelected);
       },
       child: Row(
         children: <Widget>[
-          Text(
-            _selectedLocation,
-            style: MyTheme.dropDownLabelStyle(context),
+          StreamBuilder(
+            stream: _appBloc.fromLocation,
+            initialData: "Seleziona",
+            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+              return Text(
+                snapshot.data,
+                style: MyTheme.dropDownLabelStyle(context),
+              );
+            },
           ),
           Icon(
             Icons.arrow_drop_down,
@@ -183,9 +191,11 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
     );
   }
 
-  Widget _createSearchField() {
+  Widget _createSearchField(BuildContext context) {
+
+    final _appBloc = BlocProvider.of<AppBloc>(context);
+
     return TextField(
-      controller: _textEditingController,
       style: MyTheme.dropDownMenuItemStyle(context),
       cursorColor: Theme.of(context).primaryColor,
       decoration: InputDecoration(
@@ -202,11 +212,7 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) {
-                  return InheritedFlightListing(
-                    fromLocation: _selectedLocation,
-                    toLocation: _textEditingController.text,
-                    child: FlightResults(),
-                  );
+                  return FlightResults();
                 }),
               );
             },
@@ -217,6 +223,9 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
           ),
         ),
       ),
+      onChanged: (value) {
+        _appBloc.setToLocation(value);
+      },
     );
   }
 }

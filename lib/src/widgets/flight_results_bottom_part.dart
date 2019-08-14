@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flight_search/src/models/flight_details.dart';
-import 'package:flutter/material.dart';
 import 'package:flight_search/src/utils/theme.dart';
 import 'package:flight_search/src/widgets/flight_card.dart';
+import 'package:flight_search/src/blocs/bloc_provider.dart';
+import 'package:flight_search/src/blocs/flight_results_bloc.dart';
 
 class FlightResultsBottomPart extends StatelessWidget {
   @override
@@ -49,24 +51,27 @@ class FlightResultsBottomPart extends StatelessWidget {
 //                  );
 //                }
 //            )
-            _prepareDealsList(),
+            _prepareDealsList(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _prepareDealsList() {
+  Widget _prepareDealsList(BuildContext context) {
+
+    final _flightResultsBloc = BlocProvider.of<FlightResultsBloc>(context);
+
     return Expanded(
       child: StreamBuilder(
-        stream: Firestore.instance.collection("deals").snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        stream: _flightResultsBloc.deals,
+        builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
           if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(),
             );
           } else {
-            return _createDealsList(context, snapshot.data.documents);
+            return _createDealsList(context, snapshot.data);
           }
         },
       ),

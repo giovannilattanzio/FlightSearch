@@ -1,12 +1,17 @@
-import 'package:flight_search/src/widgets/city_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flight_search/src/utils/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flight_search/src/models/city.dart';
+import 'package:flight_search/src/widgets/city_card.dart';
+import 'package:flight_search/src/blocs/bloc_provider.dart';
+import 'package:flight_search/src/blocs/home_bloc.dart';
 
 class HomeScreenBottomPart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    final _homeBloc = BlocProvider.of<HomeBloc>(context);
+
     return Column(
       children: <Widget>[
         Padding(
@@ -20,30 +25,39 @@ class HomeScreenBottomPart extends StatelessWidget {
                 style: MyTheme.dropDownMenuItemStyle(context),
               ),
               Spacer(),
-              Text(
-                "VISUALIZZA TUTTI (12)",
-                style: MyTheme.viewAllStyle(context),
+              StreamBuilder(
+                stream: _homeBloc.citiesListLenght,
+                initialData: 0,
+                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                  return Text(
+                    "VISUALIZZA TUTTI (${snapshot.data})",
+                    style: MyTheme.viewAllStyle(context),
+                  );
+                },
               ),
             ],
           ),
         ),
-        _prepareCitiesCardList(),
+        _prepareCitiesCardList(context),
       ],
     );
   }
 
-  Widget _prepareCitiesCardList() {
+  Widget _prepareCitiesCardList(BuildContext context) {
+
+    final _homeBloc = BlocProvider.of<HomeBloc>(context);
+
     return Container(
       height: 240.0,
       child: StreamBuilder(
-        stream: Firestore.instance.collection("cities").snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        stream: _homeBloc.cities,
+        builder: (context, AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
           if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(),
             );
           } else {
-            return _createCityCardList(context, snapshot.data.documents);
+            return _createCityCardList(context, snapshot.data);
           }
         },
       ),
