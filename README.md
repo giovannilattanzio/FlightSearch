@@ -11,7 +11,7 @@ In questo progetto sono stati utilizzati:
 ### Screenshot
 
 <table>
-  <thead style="background-color:grey; color: black">
+  <thead style="background-color:gray; color: black">
     <tr>
       <th colspan="2">Android</th>
       <th colspan="2">iOS</th>
