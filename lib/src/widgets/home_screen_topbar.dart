@@ -1,9 +1,11 @@
+import 'package:flight_search/src/models/location.dart';
 import 'package:flutter/material.dart';
 import 'package:flight_search/src/screens/flight_results.dart';
 import 'package:flight_search/src/widgets/custom_shape_clipper.dart';
-import 'package:flight_search/src/utils/util.dart';
 import 'package:flight_search/src/utils/theme.dart';
 import 'package:flight_search/src/widgets/choice_chip.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flight_search/src/utils/widgets/inherited_flight_listing.dart';
 
 class HomeScreenTopBar extends StatefulWidget {
   @override
@@ -11,8 +13,10 @@ class HomeScreenTopBar extends StatefulWidget {
 }
 
 class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
-  var _selectedLocation = 0;
+  var _selectedLocation = "Seleziona";
   var _isFlightSelected = true;
+
+  final _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,7 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
                       Container(
                         width: 16.0,
                       ),
-                      _createPopupMenuButton(),
+                      _preparePopupMenuButton(),
                       Spacer(),
                       Icon(
                         Icons.settings,
@@ -132,33 +136,42 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
     );
   }
 
-  Widget _createPopupMenuButton() {
+  Widget _preparePopupMenuButton() {
+    return StreamBuilder(
+      stream: Firestore.instance.collection("locations").snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return _createPopupMenuButton(context, snapshot.data.documents);
+        }
+      },
+    );
+  }
+
+  Widget _createPopupMenuButton(
+      BuildContext context, List<DocumentSnapshot> data) {
     return PopupMenuButton(
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
-        PopupMenuItem(
-          child: Text(
-            Cities.locations[0],
-            style: MyTheme.dropDownMenuItemStyle(context),
-          ),
-          value: 0,
-        ),
-        PopupMenuItem(
-          child: Text(
-            Cities.locations[1],
-            style: MyTheme.dropDownMenuItemStyle(context),
-          ),
-          value: 1,
-        ),
-      ],
-      onSelected: (index) {
+      itemBuilder: (BuildContext context) => data
+          .map((element) => PopupMenuItem(
+                child: Text(
+                  Location.fromSnapshot(element).name,
+                  style: MyTheme.dropDownMenuItemStyle(context),
+                ),
+                value: Location.fromSnapshot(element).name,
+              ))
+          .toList(),
+      onSelected: (valueSelected) {
         setState(() {
-          _selectedLocation = index;
+          _selectedLocation = valueSelected;
         });
       },
       child: Row(
         children: <Widget>[
           Text(
-            Cities.locations[_selectedLocation],
+            _selectedLocation,
             style: MyTheme.dropDownLabelStyle(context),
           ),
           Icon(
@@ -172,9 +185,7 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
 
   Widget _createSearchField() {
     return TextField(
-      controller: TextEditingController(
-        text: Cities.locations[1],
-      ),
+      controller: _textEditingController,
       style: MyTheme.dropDownMenuItemStyle(context),
       cursorColor: Theme.of(context).primaryColor,
       decoration: InputDecoration(
@@ -191,7 +202,11 @@ class _HomeScreenTopBarState extends State<HomeScreenTopBar> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) {
-                  return FlightResults();
+                  return InheritedFlightListing(
+                    fromLocation: _selectedLocation,
+                    toLocation: _textEditingController.text,
+                    child: FlightResults(),
+                  );
                 }),
               );
             },

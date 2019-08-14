@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flight_search/src/utils/theme.dart';
 import 'package:flight_search/src/utils/util.dart';
+import 'package:flight_search/src/models/city.dart';
 
 class CityCard extends StatelessWidget {
-  final String name;
-  final String image;
-  final String monthAndYear;
-  final String discount;
-  final double oldPrice;
-  final double newPrice;
+  final String _name;
+  final String _image;
+  final String _monthAndYear;
+  final int _discount;
+  final int _oldPrice;
+  final int _newPrice;
 
   final double _cardWidth = 160.0;
 
-  CityCard({
-    this.name,
-    this.image,
-    this.monthAndYear,
-    this.discount,
-    this.oldPrice,
-    this.newPrice,
-  });
+  CityCard(City city)
+      : _name = city.cityName,
+        _image = city.imagePath,
+        _monthAndYear = city.monthAndYear,
+        _discount = city.discount,
+        _oldPrice = city.oldPrice,
+        _newPrice = city.newPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +44,8 @@ class CityCard extends StatelessWidget {
           Container(
             height: 210.0,
             width: _cardWidth,
-            child: Image.asset(
-              this.image,
+            child: Image.network(
+              _image,
               fit: BoxFit.cover,
             ),
           ),
@@ -57,7 +57,6 @@ class CityCard extends StatelessWidget {
   }
 
   Widget _createPriceInformation(BuildContext context) {
-
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -66,14 +65,14 @@ class CityCard extends StatelessWidget {
           width: 5.0,
         ),
         Text(
-          "${Format.formatCurrency.format(newPrice)}",
+          "${Format.formatCurrency.format(_newPrice)}",
           style: MyTheme.cityCardNewPriceStyle(context),
         ),
         Container(
           width: 5.0,
         ),
         Text(
-          "${Format.formatCurrency.format(oldPrice)}",
+          "(${Format.formatCurrency.format(_oldPrice)})",
           style: MyTheme.cityCardOldPriceStyle(context),
         ),
       ],
@@ -115,11 +114,11 @@ class CityCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                name,
+                _name,
                 style: MyTheme.cityCardNameStyle(context),
               ),
               Text(
-                monthAndYear,
+                _monthAndYear,
                 style: MyTheme.cityCardMonthYearStyle(context),
               ),
             ],
@@ -134,7 +133,7 @@ class CityCard extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
             child: Text(
-              "$discount%",
+              "$_discount%",
               style: MyTheme.cityCardDiscountStyle(context),
             ),
           ),

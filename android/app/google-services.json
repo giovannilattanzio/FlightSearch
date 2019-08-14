@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "847461808245",
+    "firebase_url": "https://flutter-flight-search-mockup.firebaseio.com",
+    "project_id": "flutter-flight-search-mockup",
+    "storage_bucket": "flutter-flight-search-mockup.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847461808245:android:2c14cd970d37ee44",
+        "android_client_info": {
+          "package_name": "dev.giovannilattanzio.flight_search"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "847461808245-t8bjpapdfg1n40uob790v7dqppr8trdk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWSwFjBf0UXITtI1S_2S9l6M6QFSg9Imw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "847461808245-t8bjpapdfg1n40uob790v7dqppr8trdk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "847461808245-i75l3eajncdiqiu2npconrbt0h57digb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dev.giovannilattanzio.flightSearch"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

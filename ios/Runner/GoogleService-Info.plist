@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>847461808245-i75l3eajncdiqiu2npconrbt0h57digb.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.847461808245-i75l3eajncdiqiu2npconrbt0h57digb</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAB-mEjBXX7Ln5R6oW9FRP8w6KVY8HYWlY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>847461808245</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>dev.giovannilattanzio.flightSearch</string>
+	<key>PROJECT_ID</key>
+	<string>flutter-flight-search-mockup</string>
+	<key>STORAGE_BUCKET</key>
+	<string>flutter-flight-search-mockup.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:847461808245:ios:158b27ac02461abc</string>
+	<key>DATABASE_URL</key>
+	<string>https://flutter-flight-search-mockup.firebaseio.com</string>
+</dict>
+</plist>

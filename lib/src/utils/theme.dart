@@ -47,7 +47,8 @@ class MyTheme {
 
   static TextStyle cityCardOldPriceStyle(BuildContext context) => TextStyle(
     color: Colors.grey,
-    fontSize: 14.0,
+    fontSize: 13.0,
+    decoration: TextDecoration.lineThrough,
   );
 
   static TextStyle cityStartingSearchStyle(BuildContext context) => TextStyle(

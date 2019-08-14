@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flight_search/src/widgets/flight_detail_chip.dart';
 import 'package:flight_search/src/utils/theme.dart';
 import 'package:flight_search/src/utils/util.dart';
+import 'package:flight_search/src/models/flight_details.dart';
 
 class FlightCard extends StatelessWidget {
+
+  final FlightDetails flightDetails;
+
+  FlightCard(this.flightDetails);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,14 +38,14 @@ class FlightCard extends StatelessWidget {
             Row(
               children: <Widget>[
                 Text(
-                  "${Format.formatCurrency.format(4159)}",
+                  "${Format.formatCurrency.format(flightDetails.newPrice)}",
                   style: MyTheme.flightCardNewPriceStyle(context),
                 ),
                 Container(
                   width: 6.0,
                 ),
                 Text(
-                  "(${Format.formatCurrency.format(9999)})",
+                  "(${Format.formatCurrency.format(flightDetails.oldPrice)})",
                   style: MyTheme.flightCardOldPriceStyle(context),
                 ),
               ],
@@ -47,15 +53,15 @@ class FlightCard extends StatelessWidget {
             Wrap(
               children: <Widget>[
                 FlightDetailChip(
-                  label: "Giugno 2020",
+                  label: flightDetails.date,
                   icon: Icons.calendar_today,
                 ),
                 FlightDetailChip(
-                  label: "Cathay Pacific",
+                  label: flightDetails.airlines,
                   icon: Icons.flight_takeoff,
                 ),
                 FlightDetailChip(
-                  label: "4.6",
+                  label: "${flightDetails.rating}",
                   icon: Icons.star,
                 ),
               ],
@@ -78,7 +84,7 @@ class FlightCard extends StatelessWidget {
           vertical: 4.0,
         ),
         child: Text(
-          "55%",
+          "${flightDetails.discount}%",
           style: TextStyle(
             color: Theme.of(context).primaryColor,
             fontSize: 14.0,

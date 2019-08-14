@@ -1,4 +1,5 @@
 import 'package:flight_search/src/utils/theme.dart';
+import 'package:flight_search/src/utils/widgets/inherited_flight_listing.dart';
 import 'package:flight_search/src/widgets/custom_shape_clipper.dart';
 import 'package:flutter/material.dart';
 
@@ -57,7 +58,7 @@ class FlightResultsTopPart extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Boston (BOS)",
+                    InheritedFlightListing.of(context).fromLocation,
                     style: MyTheme.cityStartingSearchStyle(context),
                   ),
                   Divider(
@@ -65,7 +66,7 @@ class FlightResultsTopPart extends StatelessWidget {
                     color: Colors.grey,
                   ),
                   Text(
-                    "New York City (JFK)",
+                    InheritedFlightListing.of(context).toLocation,
                     style: MyTheme.cityArrivingSearchStyle(context),
                   ),
                 ],

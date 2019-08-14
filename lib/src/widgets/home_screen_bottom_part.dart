@@ -1,6 +1,8 @@
+import 'package:flight_search/src/widgets/city_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flight_search/src/utils/theme.dart';
-import 'package:flight_search/src/utils/util.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flight_search/src/models/city.dart';
 
 class HomeScreenBottomPart extends StatelessWidget {
   @override
@@ -25,18 +27,37 @@ class HomeScreenBottomPart extends StatelessWidget {
             ],
           ),
         ),
-        createCityCardList(),
+        _prepareCitiesCardList(),
       ],
     );
   }
 
-  Widget createCityCardList() {
+  Widget _prepareCitiesCardList() {
     return Container(
       height: 240.0,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: Cities.cityCards,
+      child: StreamBuilder(
+        stream: Firestore.instance.collection("cities").snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return _createCityCardList(context, snapshot.data.documents);
+          }
+        },
       ),
+    );
+  }
+
+
+  Widget _createCityCardList(BuildContext context, List<DocumentSnapshot> data) {
+    return ListView.builder(
+      itemCount: data.length,
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, index) {
+        return CityCard(City.fromSnapshot(data[index]));
+      },
     );
   }
 }

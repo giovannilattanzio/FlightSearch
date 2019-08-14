@@ -1,4 +1,4 @@
-package com.example.flight_search;
+package dev.giovannilattanzio.flight_search;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
