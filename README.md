@@ -1,16 +1,30 @@
-# flight_search
+# Flight Booking
 
-A new Flutter project.
+Un mockup di un app per la prenotazione di voli in **Flutter**.
 
-## Getting Started
+## Punti chiave
 
-This project is a starting point for a Flutter application.
+In questo progetto sono stati utilizzati:
+- BLoC pattern per la gestione degli stati
+- Firestore per la gestione dei dati in remoto (hosting immagini e database)
 
-A few resources to get you started if this is your first Flutter project:
+### Screenshot
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
+<table>
+  <thead style="background-color:grey; color: black">
+    <tr>
+      <th colspan="2">Android</th>
+      <th colspan="2">iOS</th>
+    </tr>
+  </thead>
+  <tr>
+    <td><img src="https://raw.githubusercontent.com/giovannilattanzio/FlightSearch/master/screenshots/android1.png" alt="screen1" width="200"></td>
+    <td><img src="https://raw.githubusercontent.com/giovannilattanzio/FlightSearch/master/screenshots/android2.png" alt="screen2" width="200"></td>
+    <td><img src="https://raw.githubusercontent.com/giovannilattanzio/FlightSearch/master/screenshots/ios1.png" alt="screen3" width="200"></td>
+    <td><img src="https://raw.githubusercontent.com/giovannilattanzio/FlightSearch/master/screenshots/ios2.png" alt="screen2" width="200"></td>
+  </tr>
+</table>
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+## Ringraziamenti
+- [Layout](https://dribbble.com/shots/5662956-Flight-Tickets-Deal-Tracker-App-Day-340-365-Project365/attachments)
+- [Live coding seguito per impostare il progetto](https://www.youtube.com/watch?v=GeMJz3EcBgs)
